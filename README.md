@@ -28,6 +28,7 @@ A simple weather dashboard that allows users to search for a city and view curre
 
 ## Project Structure
 
+```text
 weather-dashboard/
 │
 ├── index.html
@@ -35,3 +36,4 @@ weather-dashboard/
 ├── script.js
 ├── README.md
 └── .gitignore
+```
