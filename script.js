@@ -1,8 +1,17 @@
+// ===============================
+// OpenWeather API Key
+// ===============================
+// Replace this with your NEW API key.
+// Do not share the key publicly.
 const apiKey = "55387adf9c7f17b054d74f731e36925b";
+
+
+// ===============================
+// Get HTML Elements
+// ===============================
 
 const searchBtn = document.getElementById("searchBtn");
 const cityInput = document.getElementById("cityInput");
-
 const message = document.getElementById("message");
 
 const cityName = document.getElementById("cityName");
@@ -19,90 +28,93 @@ const country = document.getElementById("country");
 const description = document.getElementById("description");
 
 
-/* Search button */
+// ===============================
+// Search Button
+// ===============================
 
 searchBtn.addEventListener("click", getWeather);
 
 
-/* Press Enter to search */
+// ===============================
+// Press Enter to Search
+// ===============================
 
 cityInput.addEventListener("keypress", function (event) {
-
     if (event.key === "Enter") {
         getWeather();
     }
-
 });
 
 
-/* Get Weather */
+// ===============================
+// Get Weather
+// ===============================
 
 async function getWeather() {
 
     const city = cityInput.value.trim();
 
+    // Check empty city
     if (city === "") {
-
-        message.textContent =
-            "Please enter a city name.";
-
+        message.textContent = "Please enter a city name.";
         return;
     }
 
 
-    /* Check API key */
-
+    // Check API key
     if (
-        apiKey === "YOUR_API_KEY_HERE" ||
+        apiKey === "YOUR_NEW_API_KEY_HERE" ||
         apiKey.trim() === ""
     ) {
-
         message.textContent =
             "Please add your OpenWeather API key in script.js.";
-
         return;
     }
 
 
+    // Show loading message
     message.textContent = "Loading weather...";
 
 
     try {
 
+        // ===============================
+        // OpenWeather API URL
+        // ===============================
+
         const url =
             `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`;
 
 
+        // Send request
         const response = await fetch(url);
 
+        // Convert response to JSON
         const data = await response.json();
 
         console.log("API Response:", data);
 
 
-        /* Handle errors */
+        // ===============================
+        // Handle API Errors
+        // ===============================
 
         if (!response.ok) {
 
             if (response.status === 401) {
 
                 message.textContent =
-                    "Invalid API key or API key is not activated yet.";
+                    "Invalid API key. Please check your OpenWeather API key.";
 
-            }
-
-            else if (response.status === 404) {
+            } else if (response.status === 404) {
 
                 message.textContent =
                     "City not found. Please check the city name.";
 
-            }
-
-            else {
+            } else {
 
                 message.textContent =
-                    data.message ||
-                    "Something went wrong.";
+                    data.message || "Something went wrong.";
 
             }
 
@@ -110,48 +122,58 @@ async function getWeather() {
         }
 
 
-        /* Clear message */
+        // ===============================
+        // Clear Error Message
+        // ===============================
 
         message.textContent = "";
 
 
-        /* City */
+        // ===============================
+        // City Name
+        // ===============================
 
-        cityName.textContent =
-            data.name;
-
-
-        /* Temperature */
-
-        const temp =
-            Math.round(data.main.temp);
-
-        temperature.textContent =
-            `${temp}°C`;
-
-        temperatureDetail.textContent =
-            `${temp}°C`;
+        cityName.textContent = data.name;
 
 
-        /* Humidity */
+        // ===============================
+        // Temperature
+        // ===============================
+
+        const temp = Math.round(data.main.temp);
+
+        temperature.textContent = `${temp}°C`;
+
+        temperatureDetail.textContent = `${temp}°C`;
+
+
+        // ===============================
+        // Humidity
+        // ===============================
 
         humidity.textContent =
             `${data.main.humidity}%`;
 
 
-        /* Country */
+        // ===============================
+        // Country
+        // ===============================
 
         country.textContent =
             data.sys.country;
 
 
-        /* Weather description */
+        // ===============================
+        // Weather Description
+        // ===============================
 
         description.textContent =
             data.weather[0].description;
 
 
-        /* Weather icon */
+        // ===============================
+        // Weather Icon
+        // ===============================
 
         const iconCode =
             data.weather[0].icon;
@@ -163,10 +185,11 @@ async function getWeather() {
             data.weather[0].description;
 
 
-        /* Date and time */
+        // ===============================
+        // Date and Time
+        // ===============================
 
-        const currentDate =
-            new Date();
+        const currentDate = new Date();
 
         dateTime.textContent =
             currentDate.toLocaleString(
@@ -194,5 +217,17 @@ async function getWeather() {
         message.textContent =
             "Unable to connect to the weather service.";
     }
-
 }
+
+
+// ===============================
+// Load Vijayawada Automatically
+// ===============================
+
+window.addEventListener("load", function () {
+
+    cityInput.value = "Vijayawada";
+
+    getWeather();
+
+});
